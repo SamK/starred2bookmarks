@@ -1,0 +1,15 @@
+$def with (message = None)
+$var h2: le titre h2 ici
+$var cssfiles: static/style.css
+index here
+
+<form name="upload" method="POST" enctype="multipart/form-data"
+
+$if message:
+    <p>$message</p>
+
+<input type="file" name="myfile" />
+<br/>
+<input type="submit" />
+</form>
+

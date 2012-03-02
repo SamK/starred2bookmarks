@@ -1,0 +1,30 @@
+$def with (content)
+<html>
+<head>
+<title>My site -
+$if 'title' in content:
+    $content.title
+$else:
+    Default title here
+</title>
+<link rel="stylesheet" href="static/style.css" type="text/css" media="screen" charset="utf-8"/>
+</head>
+<body>
+<div id="header">
+<p>header here</p>
+</div>
+
+<div id="content">
+<h2>
+$if 'h2' in content: $content.h2
+</h2>
+$:content
+</div>
+
+<div id="footer">
+<p>footer here</p>
+</div>
+
+</body>
+</div>
+</html>
