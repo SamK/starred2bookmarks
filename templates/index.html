@@ -1,15 +1,22 @@
 $def with (message = None)
 $var h2: le titre h2 ici
 $var cssfiles: static/style.css
+
+<p>
 index here
+</p>
 
-<form name="upload" method="POST" enctype="multipart/form-data"
+$if message:<p class="error">$message</p>
 
-$if message:
-    <p>$message</p>
+<form class="upload" name="upload" method="POST" enctype="multipart/form-data">
 
-<input type="file" name="myfile" />
-<br/>
-<input type="submit" />
+  <label for="myfile">Convert your file here:</label>
+  <br/>
+
+  <input type="file" name="myfile" />
+  <br/>
+
+  <input class="submit" type="submit" value="Convert"/>
+
 </form>
 
