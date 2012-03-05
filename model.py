@@ -1,11 +1,12 @@
 import web
+import sys, os
 
 render = web.template.render('templates/')
 
 class Increment:
 
     def __init__(self):
-        self.file_increment = './counter.txt'
+        self.file_increment = './var/counter.txt'
 
     def count_users(self):
         f = open(self.file_increment, 'r')
@@ -19,6 +20,11 @@ class Increment:
         try:
             users = self.count_users()
         except IOError:
+            """This will happen only once"""
+            vardir = os.path.dirname(self.file_increment)
+            if not os.path.exists(vardir):
+              print >> sys.stderr, "Directory \"%s\" does not exist!" % vardir 
+              raise
             open(self.file_increment, 'w').close() # touch
             users = self.count_users()
 

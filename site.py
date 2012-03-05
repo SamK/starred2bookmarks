@@ -1,7 +1,12 @@
 #!/usr/bin/python -B
+import sys, os
+abspath = os.path.dirname(__file__)
+sys.path.append(abspath)
+if len(abspath) > 0:
+    os.chdir(abspath)
+
 import web
 import model
-import os
 import firefoxize_starred_items as reader
 
 #render = web.template.render('templates/', base='layout')
@@ -13,6 +18,9 @@ urls = (
     '/help', 'Help',
     #'/(.*)', 'Page'
 )
+
+
+print >> sys.stderr, "app debug #1*"
 
 template_globals = {}
 render_partial = web.template.render('./templates/', globals=template_globals)
@@ -33,20 +41,23 @@ class Index:
     def POST(self):
         x = web.input(myfile={})
         if not x.myfile.value:
-            errmsg = "The file is not!? 3"
+            errmsg = "For some reason I can't read your file"
             return render.index(errmsg)
-        incrementor = model.Increment()
-        incrementor.increment_users()
 
-        # download file
-        web.header('Content-Type', x.myfile.type) # file type
-        # force browser to show "Save as" dialog.
+        try:
+            data = reader.load_data(x.myfile.value)
+        except ValueError:
+            print >> sys.stderr, "Wrong file format from user"
+            return render.index("Your file does not look like a JSON file.")
 
-        data = reader.load_data(x.myfile.value)
+        # do the magic
         bookmark = reader.convert(data, False)
 
+        # force browser to show "Save as" dialog.
+        web.header('Content-Type', x.myfile.type) # file type
         web.header('Content-disposition',
                    'attachment; filename='+ x.myfile.filename + '.html') 
+        model.Increment().increment_users()
         return reader.dump_data(bookmark) # your blob 
 
 class About:
@@ -56,5 +67,17 @@ class About:
 # prod
 if __name__ == "__main__":
     app = web.application(urls, globals())
-    app.run()
 
+    app.notfound = notfound
+    app.internalerror = internalerror
+    app.run()
+elif "wsgi" in __name__:
+    print >> sys.stderr, "app debug #2*"
+    application = web.application(urls, globals()).wsgifunc()
+    print >> sys.stderr, "app debug #3*"
+    # FIXME
+    application.notfound = notfound
+    application.internalerror = internalerror
+    print >> sys.stderr, "app debug #4*"
+else:
+    print >> sys.stderr, "Je ne sais pas quoi faire avec %s" % __name__
