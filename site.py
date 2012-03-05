@@ -12,13 +12,13 @@ urls = (
     '/about', 'About',
     '/help', 'Help',
     #'/(.*)', 'Page'
-
 )
 
 template_globals = {}
 render_partial = web.template.render('./templates/', globals=template_globals)
 render = web.template.render('./templates/', globals=template_globals, base='layout')
 template_globals.update(render=render_partial)
+
 
 def notfound():
     return web.notfound(render.notfound())
@@ -35,6 +35,8 @@ class Index:
         if not x.myfile.value:
             errmsg = "The file is not!? 3"
             return render.index(errmsg)
+        incrementor = model.Increment()
+        incrementor.increment_users()
 
         # download file
         web.header('Content-Type', x.myfile.type) # file type
@@ -50,17 +52,6 @@ class Index:
 class About:
     def GET(self):
         return render.about()
-
-#app = web.application(urls, globals())
-#app.notfound = notfound
-
-#app.internalerror = internalerror
-
-# dev
-#web.webapi.internalerror = web.debugerror
-#if __name__ == "__main__": web.run(urls, globals(), web.reloader)
-
-#web.config.debug = False
 
 # prod
 if __name__ == "__main__":
