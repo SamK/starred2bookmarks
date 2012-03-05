@@ -2,14 +2,15 @@
 import web
 import model
 import os
+import firefoxize_starred_items as reader
 
 #render = web.template.render('templates/', base='layout')
 #render_plain = web.template.render('templates/')
 
 urls = (
     '/', 'Index',
-    #'/convert', 'Convert',
     '/about', 'About',
+    '/help', 'Help',
     #'/(.*)', 'Page'
 
 )
@@ -31,8 +32,6 @@ class Index:
 
     def POST(self):
         x = web.input(myfile={})
-        print "processing"
-        print x.myfile
         if not x.myfile.value:
             errmsg = "The file is not!? 3"
             return render.index(errmsg)
@@ -40,9 +39,13 @@ class Index:
         # download file
         web.header('Content-Type', x.myfile.type) # file type
         # force browser to show "Save as" dialog.
+
+        data = reader.load_data(x.myfile.value)
+        bookmark = reader.convert(data, False)
+
         web.header('Content-disposition',
-                   'attachment; filename='+ x.myfile.filename + '.json') 
-        return x.myfile.value # your blob 
+                   'attachment; filename='+ x.myfile.filename + '.html') 
+        return reader.dump_data(bookmark) # your blob 
 
 class About:
     def GET(self):
