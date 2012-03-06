@@ -58,11 +58,18 @@ div#nav {
   position: absolute;
   top: 0px;
   right: 0px; 
+  padding: 0;
+  margin: 0;
 }
-
+div#nav ul{
+  padding:0;
+  margin: 0;
+}
 div#nav li {
   list-style: none;
   display: inline;
+  padding:0;
+  margin: 0;
 }
 
 /* Content */
@@ -95,7 +102,8 @@ p.error {
   margin-right: auto;
   margin-bottom: 1em;
   margin-top: 1em;
-  width: 80%;
+  padding: 1em;
+  width: 50%;
 }
 
 /* Footer */
