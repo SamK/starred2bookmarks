@@ -1,0 +1,10 @@
+Options +ExecCGI
+AddHandler cgi-script .fcgi
+#AddHandler fcgid-script .py
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} !^/static
+RewriteCond %{REQUEST_URI} !^(/.*)+site.fcgi/
+RewriteRule ^(.*)$ site.fcgi/$1 [PT]
+
