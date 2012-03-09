@@ -77,6 +77,6 @@ def deploy_static():
     _put_dir('static',  env.staticpath )
 
 def clean():
-    local("/bin/rm firefoxize_starred_items.py")
-    local("/bin/rm .build")
+    local("/bin/rm -f firefoxize_starred_items.py")
+    local("/bin/rm -f .build")
 
