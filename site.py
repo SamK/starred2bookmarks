@@ -1,11 +1,16 @@
-#!/usr/bin/python -B
+#!/usr/bin/python
 import sys, os
+
+# import files in modules
+sys.path.insert(0, "/home/samk/modules")
+
+# Import files in current dir
 abspath = os.path.dirname(__file__)
-sys.path.append(abspath)
+sys.path.insert(0, abspath)
 if len(abspath) > 0:
     os.chdir(abspath)
 
-import web
+import webpy as web
 import model
 import firefoxize_starred_items as reader
 
@@ -19,14 +24,7 @@ urls = (
     #'/(.*)', 'Page'
 )
 
-
-print >> sys.stderr, "app debug #1*"
-
-template_globals = {}
-render_partial = web.template.render('./templates/', globals=template_globals)
-render = web.template.render('./templates/', globals=template_globals, base='layout')
-template_globals.update(render=render_partial)
-
+render = web.template.render('templates/', base='layout')
 
 def notfound():
     return web.notfound(render.notfound())
@@ -66,18 +64,17 @@ class About:
 
 # prod
 if __name__ == "__main__":
+    print >> sys.stderr, "__name__ == __main__"
     app = web.application(urls, globals())
-
     app.notfound = notfound
     app.internalerror = internalerror
     app.run()
 elif "wsgi" in __name__:
-    print >> sys.stderr, "app debug #2*"
+    print >> sys.stderr, "wsgi in__name__"
     application = web.application(urls, globals()).wsgifunc()
-    print >> sys.stderr, "app debug #3*"
     # FIXME
     application.notfound = notfound
     application.internalerror = internalerror
-    print >> sys.stderr, "app debug #4*"
 else:
     print >> sys.stderr, "Je ne sais pas quoi faire avec %s" % __name__
+
