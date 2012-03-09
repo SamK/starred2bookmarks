@@ -67,6 +67,7 @@ def deploy_app():
     put('model.py',  env.apppath + 'model.py')
     put('site.py',  env.apppath + 'site.fcgi')
     put('firefoxize_starred_items.py', env.apppath + 'firefoxize_starred_items.py')
+    run('chmod +x %ssite.fcgi' % env.apppath)
 
 def deploy_static():
     if not os.path.exists(".build") and not confirm("Looks like there is no build. Continue anyway? [DANGEROUS]"):
